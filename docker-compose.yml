@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgis/postgis:15-3.3
+    container_name: snapp-postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: snapp
+      POSTGRES_PASSWORD: snapp
+      POSTGRES_DB: snapp
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+  redis:
+    image: redis:7
+    container_name: snapp-redis
+    ports:
+      - 6379:6379
+    restart: always
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: snapp-rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    restart: always
+  minio:
+    image: minio/minio
+    container_name: snapp-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    ports:
+      - 9000:9000
+      - 9001:9001
+    restart: always
+
+volumes:
+  pgdata:
